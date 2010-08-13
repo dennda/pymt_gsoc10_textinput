@@ -1,4 +1,5 @@
 from pymt import *
+from movidimagestream import *
 
 
 class HandDrawer(MTWidget):
@@ -51,5 +52,14 @@ class HandDrawer(MTWidget):
         drawRectangle((self.palm.x, self.palm.y), (5, 5))
 
 
-runTouchApp(HandDrawer())
+if __name__ == '__main__':
+    observed = ['cam', 'thresh', 'smooth', 'fingertips']
+    w = getWindow()
+    for module in observed:
+        client = MJpegClient(objectname=module)
+        client.start()
+        w.add_widget(MTMJpegClient(client))
+    w.add_widget(HandDrawer())
+
+    runTouchApp()
 
