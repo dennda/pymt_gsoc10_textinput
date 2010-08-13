@@ -55,10 +55,15 @@ class HandDrawer(MTWidget):
 if __name__ == '__main__':
     observed = ['cam', 'thresh', 'smooth', 'fingertips']
     w = getWindow()
-    for module in observed:
+    for index, module in enumerate(observed):
         client = MJpegClient(objectname=module)
         client.start()
-        w.add_widget(MTMJpegClient(client))
+        widget = MTMJpegClient(client)
+        def reposition(widget, index, *args):
+            widget.y = w.height - widget.height
+            widget.x = index * widget.width
+        widget.connect('on_update', curry(reposition, widget, index))
+        w.add_widget(widget)
     w.add_widget(HandDrawer())
 
     runTouchApp()
